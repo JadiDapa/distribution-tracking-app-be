@@ -1,0 +1,801 @@
+openapi: 3.0.0
+
+info:
+  title: Ynsect RESTful API
+  description: |-
+    This is Ynsect temporary RESTful API
+    API functionality might change in the future
+
+  version: 1.0.0
+  contact:
+    name: raihan
+
+servers:
+  - url: http://localhost:300/api
+    description: localhost
+
+paths:
+  /users:
+    get:
+      summary: List all users
+      description: List all users
+      tags:
+        - User API
+      responses:
+        '200':
+          description: 'Success get all users'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+  /users/{userId}:
+    get:
+      summary: Get user by id
+      description: Get user by id
+      tags:
+        - User API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get user by id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+  /users/signup:
+    post:
+      summary: Signup user
+      description: Signup user
+      tags:
+        - User API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 'Success signup user'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /carts/{userId}:
+    get:
+      summary: Get cart by user id
+      description: Get cart by user id
+      tags:
+        - Cart API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get cart by user id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cart'
+    delete:
+      summary: Delete cart by user id
+      description: Delete cart by user id
+      tags:
+        - Cart API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success delete cart by user id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+    post:
+      summary: update or add product to cart with more functionality
+      description: update or add product to cart with more functionality
+      tags:
+        - Cart API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: number
+                quantity:
+                  type: number
+      responses:
+        '200':
+          description: 'Success update or add product to cart with more functionality'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Cart'
+  /carts/{userId}/add:
+    post:
+      summary: add one product to cart
+      description: add one product to cart
+      tags:
+        - Cart API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: number
+      responses:
+        '200':
+          description: 'Success add one product to cart'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+  /carts/{userId}/decrease:
+    post:
+      summary: decrease one product from cart
+      description: decrease one product from cart
+      tags:
+        - Cart API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: number
+      responses:
+        '200':
+          description: 'Success decrease one product from cart'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+  /products:
+    get:
+      summary: Get all products
+      description: Get all products
+      tags:
+        - Product API
+      responses:
+        '200':
+          description: 'Success get all products'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+  /products/{productId}:
+    get:
+      summary: Get product by id
+      description: Get product by id
+      tags:
+        - Product API
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: product id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get product by id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Product'
+
+  /forums:
+    get:
+      summary: Get all forums
+      description: Get all forums
+      tags:
+        - Forum API
+      responses:
+        '200':
+          description: 'Success get all forums'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Forum'
+    post:
+      summary: Create forum
+      description: Create forum
+      tags:
+        - Forum API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Forum'
+      responses:
+        '200':
+          description: 'Success create forum'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Forum'
+  /forums/{forumId}:
+    get:
+      tags:
+        - Forum API
+      summary: Get forum by id
+      description: Get forum by id
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get forum by id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Forum'
+
+  /likes:
+    post:
+      tags:
+        - Likes API
+      summary: Create likes
+      description: Create likes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Likes'
+      responses:
+        '200':
+          description: 'Success create likes'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Likes'
+  /likes/{forumId}:
+    get:
+      tags:
+        - Likes API
+      summary: Get likes by forum id
+      description: Get likes by forum id
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get likes by forum id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Likes'
+    delete:
+      summary: Delete likes
+      description: Delete likes
+      tags:
+        - Likes API
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success delete likes'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Likes'
+
+  /comments/{forumId}:
+    get:
+      summary: Get comments by forum id
+      description: Get comments by forum id
+      tags:
+        - Comments API
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get comments by forum id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comments'
+    post:
+      summary: Create comments
+      description: Create comments
+      tags:
+        - Comments API
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comments'
+      responses:
+        '200':
+          description: 'Success create comments'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Comments'
+    put:
+      summary: Update comments
+      description: Update comments
+      tags:
+        - Comments API
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comments'
+      responses:
+        '200':
+          description: 'Success update comments'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Comments'
+  /comments/{forumId}/{commentId}:
+    delete:
+      summary: Delete comments
+      description: Delete comments
+      tags:
+        - Comments API
+      parameters:
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+        - name: commentId
+          in: path
+          required: true
+          description: comment id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success delete comments'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Comments'
+
+  /saved/{userId}:
+    get:
+      summary: Get saved forums by user id
+      description: Get saved forums by user id
+      tags:
+        - Saved API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success get saved forums by user id'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Saved'
+    post:
+      summary: Create saved forums
+      description: Create saved forums
+      tags:
+        - Saved API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Saved'
+      responses:
+        '200':
+          description: 'Success create saved forums'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Saved'
+  /saved/{userId}/{forumId}:
+    delete:
+      summary: Delete saved forums by user id and forum id
+      description: Delete saved forums by user id and forum id
+      tags:
+        - Saved API
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: user id
+          schema:
+            type: number
+        - name: forumId
+          in: path
+          required: true
+          description: forum id
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Success delete saved forums'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Saved'
+components:
+  schemas:
+    Forum:
+      type: object
+      properties:
+        id:
+          type: number
+        question:
+          type: string
+        userId:
+          type: string
+    Saved:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: string
+        forumId:
+          type: string
+        status:
+          type: boolean
+    Comments:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: string
+        forumId:
+          type: string
+        comment:
+          type: string
+    Likes:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: string
+        forumId:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        no_telp:
+          type: string
+        alamat:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        price:
+          type: number
+        stock:
+          type: number
+        description:
+          type: string
+    Cart:
+      type: object
+      properties:
+        userId:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              price:
+                type: number
+              description:
+                type: string
+              quantity:
+                type: number
+        total_items:
+          type: number
+        total_price:
+          type: number
+    Orders:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        total_items:
+          type: number
+        total_price:
+          type: number
+        status:
+          type: string

@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  user              String
+  password          String
+  picture           String?
+  status            String
+  unitId            Int
+  unit              AccountUnit         @relation(fields: [unitId], references: [id])
+  higherAccountId   Int?
+  higherAccount     Account?            @relation("HigherAccount", fields: [higherAccountId], references: [id])
+  lowerAccounts     Account[]           @relation("HigherAccount")
+  MaterialInventory MaterialInventory[]
+  ToolInventory     ToolInventory[]
+  VehicleInventory  VehicleInventory[]
+  requestedRequests Request[]           @relation("RequestedRelation")
+  requesterRequests Request[]           @relation("RequesterRelation")
+}
+
+model AccountUnit {
+  id       Int       @id @default(autoincrement())
+  unit     String    @unique
+  accounts Account[]
+}
+
+model Material {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  sku               String              @unique
+  status            String
+  detail            String?
+  picture           String?
+  category          MaterialCat         @relation(fields: [categoryId], references: [id])
+  categoryId        Int
+  MaterialInventory MaterialInventory[]
+  RequestItem       RequestItem[]
+}
+
+model MaterialCat {
+  id       Int        @id @default(autoincrement())
+  category String
+  Material Material[]
+}
+
+model MaterialInventory {
+  id         Int      @id @default(autoincrement())
+  material   Material @relation(fields: [materialId], references: [id])
+  materialId Int
+  account    Account  @relation(fields: [accountId], references: [id])
+  accountId  Int
+}
+
+model Tool {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  sku           String          @unique
+  status        String
+  expired_at    DateTime
+  detail        String?
+  picture       String?
+  category      ToolCat         @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  ToolInventory ToolInventory[]
+  Request       RequestItem[]
+}
+
+model ToolCat {
+  id       Int    @id @default(autoincrement())
+  category String
+  Tool     Tool[]
+}
+
+model ToolInventory {
+  id        Int     @id @default(autoincrement())
+  tool      Tool    @relation(fields: [toolId], references: [id])
+  toolId    Int
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+  quantity  Int
+}
+
+model Vehicle {
+  id               Int                @id @default(autoincrement())
+  police_number    String             @unique
+  variant          VehicleVariant     @relation(fields: [variantId], references: [id])
+  variantId        Int
+  brand            String
+  cc               String
+  fuel_type        FuelType           @relation(fields: [fuel_typeId], references: [id])
+  fuel_typeId      Int
+  detail           String
+  manufacture_year DateTime
+  contract_start   DateTime
+  contract_end     DateTime
+  picture          String?
+  VehicleInventory VehicleInventory[]
+}
+
+model VehicleVariant {
+  id       Int       @id @default(autoincrement())
+  category String
+  Vehicle  Vehicle[]
+}
+
+model FuelType {
+  id       Int       @id @default(autoincrement())
+  category String
+  Vehicle  Vehicle[]
+}
+
+model VehicleInventory {
+  id        Int     @id @default(autoincrement())
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicleId Int
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+  quantity  Int
+}
+
+model Request {
+  id          Int           @id @default(autoincrement())
+  requester   Account       @relation(name: "RequesterRelation", fields: [requesterId], references: [id])
+  requesterId Int
+  requested   Account       @relation(name: "RequestedRelation", fields: [requestedId], references: [id])
+  requestedId Int
+  items       RequestItem[]
+  note        String        @db.LongText
+  status      String        @default("pending")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model RequestItem {
+  id         Int       @id @default(autoincrement())
+  material   Material? @relation(fields: [materialId], references: [id])
+  materialId Int?
+  tool       Tool?     @relation(fields: [toolId], references: [id])
+  toolId     Int?
+  Quantity   Int
+  Request    Request?  @relation(fields: [requestId], references: [id])
+  requestId  Int?
+}
