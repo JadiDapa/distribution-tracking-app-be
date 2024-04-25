@@ -20,4 +20,15 @@ const loginAccount = async (data) => {
   return schema.validate(data);
 };
 
-module.exports = { createAccount, loginAccount };
+const createRequest = async (data) => {
+  const schema = Joi.object({
+    requesterId: Joi.number().required(),
+    requestedId: Joi.number().required(),
+    note: Joi.string().required(),
+    status: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+module.exports = { createAccount, loginAccount, createRequest };

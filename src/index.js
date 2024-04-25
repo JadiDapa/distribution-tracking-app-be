@@ -8,9 +8,8 @@ const MaterialRouter = require('./routes/route.material');
 const ToolRouter = require('./routes/route.tool');
 const VehicleRouter = require('./routes/route.vehicle');
 const AccountUnitRouter = require('./routes/route.account-unit');
-// const UserRouter = require('./routes/route.user');
-// const CartRouter = require('./routes/route.cart');
-// const ProductRouter = require('./routes/route.product');
+const RequestRouter = require('./routes/route.request');
+const RequestItemRouter = require('./routes/route-request-item');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -19,9 +18,8 @@ app.use('/api', AccountUnitRouter);
 app.use('/api', MaterialRouter);
 app.use('/api', ToolRouter);
 app.use('/api', VehicleRouter);
-// app.use('/api', UserRouter);
-// app.use('/api', CartRouter);
-// app.use('/api', ProductRouter);
+app.use('/api', RequestRouter);
+app.use('/api', RequestItemRouter);
 
 app.listen(port, () => {
   console.log('Server aktif');

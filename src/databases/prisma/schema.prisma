@@ -151,7 +151,7 @@ model RequestItem {
   materialId Int?
   tool       Tool?     @relation(fields: [toolId], references: [id])
   toolId     Int?
-  Quantity   Int
+  quantity   Int
   Request    Request?  @relation(fields: [requestId], references: [id])
   requestId  Int?
 }
