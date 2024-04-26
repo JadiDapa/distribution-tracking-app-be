@@ -1,18 +1,16 @@
 const ToolModel = require('../models/model.tool');
 const tool = new ToolModel();
-const responseHelper = require('../helpers/helper.response');
+const ErrorResponse = require('../helpers/helper.error');
+const SuccessResponse = require('../helpers/helper.success');
+const Validation = require('../helpers/helper.validation');
 
 class ToolController {
   static async getTools(req, res) {
     try {
       const results = await tool.getAll();
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Tools Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
@@ -20,27 +18,56 @@ class ToolController {
     try {
       const toolId = parseInt(req.params.toolId);
       const results = await tool.getById(toolId);
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Tool Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
   static async createTool(req, res) {
     try {
       const data = req.body;
-      const results = await tool.create(data);
-      return responseHelper(res, 201, 'success', results);
+      const { error } = await Validation.createTool(data);
+      if (error) {
+        return ErrorResponse.BadRequest(req, res, error.details[0].message);
+      }
+      const result = await tool.create(data);
+      return SuccessResponse.Created(req, res, 'Tool created', result);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
+
+  static async editTool(req, res) {
+    try {
+      const toolId = parseInt(req.params.toolId);
+      const data = req.body;
+      const { error } = await Validation.createTool(toolId, data);
+      if (error) {
+        return ErrorResponse.BadRequest(req, res, error.details[0].message);
+      }
+      const updatedRequest = await tool.editById(toolId, newData);
+
+      if (!updatedRequest) {
+        return ErrorResponse.NotFound(req, res, error.message);
+      }
+
+      return SuccessResponse.Created(req, res, 'Tool created', result);
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
+
+  static async deleteTool(req, res) {
+    try {
+      const toolId = parseInt(req.params.toolId);
+      const deletedRequest = await tool.deleteById(toolId);
+      if (!deletedRequest) {
+        return ErrorResponse.NotFound(req, res, 'Tool not found');
+      }
+      return SuccessResponse.OK(req, res, 'Tool deleted');
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 }

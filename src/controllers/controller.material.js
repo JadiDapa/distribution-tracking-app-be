@@ -1,18 +1,16 @@
 const MaterialModel = require('../models/model.material');
 const material = new MaterialModel();
-const responseHelper = require('../helpers/helper.response');
+const ErrorResponse = require('../helpers/helper.error');
+const SuccessResponse = require('../helpers/helper.success');
+const Validation = require('../helpers/helper.validation');
 
 class MaterialController {
   static async getMaterials(req, res) {
     try {
       const results = await material.getAll();
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Materials Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
@@ -20,27 +18,56 @@ class MaterialController {
     try {
       const materialId = parseInt(req.params.materialId);
       const results = await material.getById(materialId);
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Material Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
   static async createMaterial(req, res) {
     try {
       const data = req.body;
-      const results = await material.create(data);
-      return responseHelper(res, 201, 'success', results);
+      const { error } = await Validation.createMaterial(data);
+      if (error) {
+        return ErrorResponse.BadRequest(req, res, error.details[0].message);
+      }
+      const result = await material.create(data);
+      return SuccessResponse.Created(req, res, 'Material created', result);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
+
+  static async editMaterial(req, res) {
+    try {
+      const materialId = parseInt(req.params.materialId);
+      const data = req.body;
+      const { error } = await Validation.createMaterial(materialId, data);
+      if (error) {
+        return ErrorResponse.BadRequest(req, res, error.details[0].message);
+      }
+      const updatedRequest = await material.editById(materialId, newData);
+
+      if (!updatedRequest) {
+        return ErrorResponse.NotFound(req, res, error.message);
+      }
+
+      return SuccessResponse.Created(req, res, 'Material created', result);
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
+
+  static async deleteMaterial(req, res) {
+    try {
+      const materialId = parseInt(req.params.materialId);
+      const deletedRequest = await material.deleteById(materialId);
+      if (!deletedRequest) {
+        return ErrorResponse.NotFound(req, res, 'Material not found');
+      }
+      return SuccessResponse.OK(req, res, 'Material deleted');
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 }

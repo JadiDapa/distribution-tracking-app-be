@@ -31,4 +31,32 @@ const createRequest = async (data) => {
   return schema.validate(data);
 };
 
-module.exports = { createAccount, loginAccount, createRequest };
+const createMaterial = async (data) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    sku: Joi.string().required(),
+    status: Joi.string().required(),
+    detail: Joi.string().required(),
+    picture: Joi.string().required(),
+    categoryId: Joi.number().required(),
+    picture: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+const createTool = async (data) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    sku: Joi.string().required(),
+    status: Joi.string().required(),
+    detail: Joi.string().required(),
+    picture: Joi.string().required(),
+    categoryId: Joi.number().required(),
+    picture: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+module.exports = { createAccount, loginAccount, createRequest, createMaterial };
