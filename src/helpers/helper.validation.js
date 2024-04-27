@@ -45,6 +45,14 @@ const createMaterial = async (data) => {
   return schema.validate(data);
 };
 
+const createMaterialCategory = async (data) => {
+  const schema = Joi.object({
+    category: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
 const createTool = async (data) => {
   const schema = Joi.object({
     name: Joi.string().required(),
@@ -59,4 +67,20 @@ const createTool = async (data) => {
   return schema.validate(data);
 };
 
-module.exports = { createAccount, loginAccount, createRequest, createMaterial };
+const createToolCategory = async (data) => {
+  const schema = Joi.object({
+    category: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+module.exports = {
+  createAccount,
+  loginAccount,
+  createRequest,
+  createMaterial,
+  createMaterialCategory,
+  createTool,
+  createToolCategory
+};
