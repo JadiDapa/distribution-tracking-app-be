@@ -52,6 +52,16 @@ const createMaterialCategory = async (data) => {
   return schema.validate(data);
 };
 
+const createMaterialInventory = async (data) => {
+  const schema = Joi.object({
+    quantity: Joi.number().required(),
+    materialId: Joi.number().required(),
+    accountId: Joi.number().required()
+  });
+
+  return schema.validate(data);
+};
+
 const createTool = async (data) => {
   const schema = Joi.object({
     name: Joi.string().required(),
@@ -74,6 +84,16 @@ const createToolCategory = async (data) => {
   return schema.validate(data);
 };
 
+const createToolInventory = async (data) => {
+  const schema = Joi.object({
+    quantity: Joi.number().required(),
+    materialId: Joi.number().required(),
+    accountId: Joi.number().required()
+  });
+
+  return schema.validate(data);
+};
+
 module.exports = {
   createAccount,
   loginAccount,
@@ -81,5 +101,7 @@ module.exports = {
   createMaterial,
   createMaterialCategory,
   createTool,
-  createToolCategory
+  createToolCategory,
+  createMaterialInventory,
+  createToolInventory
 };

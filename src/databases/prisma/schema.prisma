@@ -63,6 +63,7 @@ model MaterialInventory {
   materialId Int
   account    Account  @relation(fields: [accountId], references: [id])
   accountId  Int
+  quantity   Int
 }
 
 model Tool {
