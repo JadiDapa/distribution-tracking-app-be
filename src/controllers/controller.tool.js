@@ -32,7 +32,7 @@ class ToolController {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
       const result = await tool.create(data);
-      return SuccessResponse.Created(req, res, 'Tool created', result);
+      return SuccessResponse.Created(req, res, 'Tool created');
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
@@ -42,17 +42,17 @@ class ToolController {
     try {
       const toolId = parseInt(req.params.toolId);
       const data = req.body;
-      const { error } = await Validation.createTool(toolId, data);
+      const { error } = await Validation.createTool(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
-      const updatedRequest = await tool.editById(toolId, newData);
+      const updatedRequest = await tool.editById(toolId, data);
 
       if (!updatedRequest) {
         return ErrorResponse.NotFound(req, res, error.message);
       }
 
-      return SuccessResponse.Created(req, res, 'Tool created', result);
+      return SuccessResponse.Created(req, res, 'Tool Updated');
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }

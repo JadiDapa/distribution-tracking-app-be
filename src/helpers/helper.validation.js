@@ -36,10 +36,9 @@ const createMaterial = async (data) => {
     name: Joi.string().required(),
     sku: Joi.string().required(),
     status: Joi.string().required(),
-    detail: Joi.string().required(),
-    picture: Joi.string().required(),
-    categoryId: Joi.number().required(),
-    picture: Joi.string().required()
+    detail: Joi.string().optional(),
+    picture: Joi.string().optional(),
+    categoryId: Joi.number().required()
   });
 
   return schema.validate(data);
@@ -58,10 +57,10 @@ const createTool = async (data) => {
     name: Joi.string().required(),
     sku: Joi.string().required(),
     status: Joi.string().required(),
-    detail: Joi.string().required(),
-    picture: Joi.string().required(),
-    categoryId: Joi.number().required(),
-    picture: Joi.string().required()
+    expired_at: Joi.date().required(),
+    detail: Joi.string().optional(),
+    picture: Joi.string().optional(),
+    categoryId: Joi.number().required()
   });
 
   return schema.validate(data);

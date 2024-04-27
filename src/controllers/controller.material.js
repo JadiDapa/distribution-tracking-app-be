@@ -42,17 +42,17 @@ class MaterialController {
     try {
       const materialId = parseInt(req.params.materialId);
       const data = req.body;
-      const { error } = await Validation.createMaterial(materialId, data);
+      const { error } = await Validation.createMaterial(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
-      const updatedRequest = await material.editById(materialId, newData);
+      const updatedRequest = await material.editById(materialId, data);
 
       if (!updatedRequest) {
         return ErrorResponse.NotFound(req, res, error.message);
       }
 
-      return SuccessResponse.Created(req, res, 'Material created', result);
+      return SuccessResponse.Created(req, res, 'Material Updated');
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
