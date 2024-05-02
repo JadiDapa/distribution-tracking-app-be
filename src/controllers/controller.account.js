@@ -5,18 +5,17 @@ const bcrypt = require('bcrypt');
 const response = require('../helpers/helper.error');
 const { generateToken } = require('../helpers/helper.authorization');
 const { loginAccount } = require('../helpers/helper.validation');
+const ErrorResponse = require('../helpers/helper.error');
+const SuccessResponse = require('../helpers/helper.success');
+const Validation = require('../helpers/helper.validation');
 
 class AccountController {
   static async getAccounts(req, res) {
     try {
       const results = await account.getAll();
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Accounts Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
@@ -24,33 +23,27 @@ class AccountController {
     try {
       const accountId = parseInt(req.params.accountId);
       const results = await account.getById(accountId);
-      return responseHelper(res, 200, 'success', results);
+      return SuccessResponse.DataFound(req, res, 'Account Found', results);
     } catch (error) {
-      return res.status(500).json({
-        code: 500,
-        status: 'error',
-        message: error.message
-      });
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
   static async createAccount(req, res) {
     try {
-      const { name, password, ...data } = req.body;
-      if (!name && !password) {
-        return response.Unauthorized(req, res, 'All field must be filled');
+      const data = req.body;
+      const { error } = await Validation.createAccount(data);
+      if (error) {
+        return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
-      const accountExist = await account.getByName(name);
-      console.log(accountExist, 'already exist');
+      const accountExist = await account.getByName(data);
       if (accountExist) {
-        return response.Unauthorized(req, res, 'Account already exist');
+        return ErrorResponse.Unauthorized(req, res, 'Account already exist');
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const results = await account.create({ name, password: hashedPassword, ...data });
-      console.log(results);
-      return response.Created(req, res, 'Account created successfully!', results);
+      const results = await account.create(data);
+      return SuccessResponse.Created(req, res, 'Account Created', results);
     } catch (error) {
-      return response.InternalServerError(req, res, error.message);
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
@@ -64,7 +57,7 @@ class AccountController {
       const result = await account.login(data);
       const token = generateToken({ id: result.id });
       result.token = token;
-      return response.DataFound(req, res, 'Login success', result);
+      return SuccessResponse.DataFound(req, res, 'Login Successfull', result);
     } catch (error) {
       return response.InternalServerError(req, res, error.message);
     }
@@ -77,10 +70,10 @@ class AccountController {
       const updatedAccount = await account.editById(accountId, newData);
 
       if (!updatedAccount) {
-        return response.NotFound(req, res, 'Account not found');
+        return ErrorResponse.NotFound(req, res, 'Accounts Found', results);
       }
 
-      return response.Success(req, res, 'Account updated successfully', updatedAccount);
+      return SuccessResponse.Created(req, res, 'Account Updated', results);
     } catch (error) {
       return response.InternalServerError(req, res, error.message);
     }
@@ -89,15 +82,13 @@ class AccountController {
   static async deleteAccount(req, res) {
     try {
       const accountId = parseInt(req.params.accountId);
-      console.log(accountId);
       const deletedAccount = await account.deleteById(accountId);
-      console.log(deletedAccount);
       if (!deletedAccount) {
         return response.NotFound(req, res, 'Account not found');
       }
-      return response.Success(req, res, 'Account deleted successfully');
+      return SuccessResponse.OK(req, res, 'Account Deleted');
     } catch (error) {
-      return response.InternalServerError(req, res, error.message);
+      return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 }

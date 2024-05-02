@@ -19,48 +19,52 @@ class MaterialInventoryModel {
     });
   }
 
-  async acceptStock(data) {
-    const getRequesterInventoryQuantity = await prisma.materialInventory.findFirst({
-      where: {
-        materialId: parseInt(data.materialId),
-        accountId: parseInt(data.requesterId)
-      }
-    });
-
-    const getRequestedInventoryQuantity = await prisma.materialInventory.findFirst({
-      where: {
-        materialId: parseInt(data.materialId),
-        accountId: parseInt(data.requestedId)
-      }
-    });
-
-    await prisma.materialInventory.update({
-      where: {
-        id: getRequestedInventoryQuantity.id
-      },
-      data: {
-        quantity: getRequestedInventoryQuantity.quantity - data.quantity
-      }
-    });
-
-    if (getRequesterInventoryQuantity) {
-      return await prisma.materialInventory.update({
+  async acceptStock(request, items) {
+    items.forEach(async (item) => {
+      const getRequestedInventory = await prisma.materialInventory.findUnique({
         where: {
-          id: getRequesterInventoryQuantity.id
-        },
-        data: {
-          quantity: getRequesterInventoryQuantity.quantity + data.quantity
+          materialId: parseInt(item.materialId),
+          accountId: parseInt(request.requestedId)
         }
       });
-    } else {
-      return await prisma.materialInventory.create({
-        data: {
-          accountId: data.accountId,
-          materialId: data.materialId,
-          quantity: data.quantity
+
+      const getRequesterInventory = await prisma.materialInventory.findUnique({
+        where: {
+          materialId: parseInt(item.materialId),
+          accountId: parseInt(request.requesterId)
         }
       });
-    }
+
+      if (getRequestedInventory) {
+        await prisma.materialInventory.update({
+          where: {
+            id: getRequestedInventory.id
+          },
+          data: {
+            quantity: getRequestedInventory.quantity - item.quantity
+          }
+        });
+      }
+
+      if (getRequesterInventory) {
+        await prisma.materialInventory.update({
+          where: {
+            id: getRequesterInventory.id
+          },
+          data: {
+            quantity: getRequesterInventory.quantity + item.quantity
+          }
+        });
+      } else {
+        await prisma.materialInventory.create({
+          data: {
+            accountId: request.requesterId,
+            materialId: item.materialId,
+            quantity: item.quantity
+          }
+        });
+      }
+    });
   }
 
   async editById(materialInventoryId, newData) {

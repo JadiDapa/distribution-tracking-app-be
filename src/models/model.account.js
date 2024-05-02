@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
-const response = require('../helpers/helper.error');
 
 class AccountModel {
   async getAll() {
@@ -20,17 +19,25 @@ class AccountModel {
     });
   }
 
-  async getByName(name) {
+  async getByName(data) {
     return await prisma.account.findUnique({
       where: {
-        name: name
+        name: data.name
       }
     });
   }
 
   async create(data) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
     return await prisma.account.create({
-      data: data
+      data: {
+        name: data.name,
+        user: data.user,
+        password: hashedPassword,
+        higherAccountId: data.higherAccountId,
+        status: data.status,
+        unitId: data.unitId
+      }
     });
   }
 

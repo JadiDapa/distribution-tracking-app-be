@@ -27,8 +27,11 @@ class RequestItemController {
 
   static async createRequestItem(req, res) {
     try {
-      const { items } = req.body;
-      const result = await requestItem.create(items);
+      const request = req.result;
+      const items = req.items;
+      request.code = items.code;
+      console.log(request);
+      // const result = await requestItem.create(request, items);
       return SuccessResponse.Created(req, res, 'Request Item created', result);
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);

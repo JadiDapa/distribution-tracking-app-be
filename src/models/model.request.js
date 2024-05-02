@@ -10,16 +10,16 @@ class RequestModel {
       include: {
         requested: {
           select: { name: true }
-        }
+        },
+        items: true
       }
     });
   }
 
-  async getById(requestId, accountId) {
-    return await prisma.request.findUnique({
+  async getAllByRequestedId(accountId) {
+    return await prisma.request.findMany({
       where: {
-        id: parseInt(requestId),
-        requesterId: parseInt(accountId)
+        requestedId: parseInt(accountId)
       },
       include: {
         requested: {
@@ -30,14 +30,40 @@ class RequestModel {
     });
   }
 
+  async getById(requestId) {
+    return await prisma.request.findUnique({
+      where: {
+        id: parseInt(requestId)
+      },
+      include: {
+        requested: {
+          select: { name: true }
+        },
+        requester: {
+          select: { name: true }
+        },
+        items: {
+          include: { material: true, tool: true }
+        }
+      }
+    });
+  }
+
   async create(data) {
+    const getCode = await prisma.request.findFirst({
+      orderBy: {
+        id: 'desc'
+      }
+    });
+    let newCode = String(getCode.id + 38402).padStart(6, '0');
+    data.code = newCode;
     return await prisma.request.create({
       data: data
     });
   }
 
   async editById(accountId, newData) {
-    return await prisma.account.update({
+    return await prisma.request.update({
       where: {
         id: parseInt(accountId)
       },

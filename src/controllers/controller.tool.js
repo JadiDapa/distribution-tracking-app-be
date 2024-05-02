@@ -27,6 +27,9 @@ class ToolController {
   static async createTool(req, res) {
     try {
       const data = req.body;
+      const pictureUrl = req.fileUrl;
+      data.picture = pictureUrl;
+      data.categoryId = parseInt(data.categoryId);
       const { error } = await Validation.createTool(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);

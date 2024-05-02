@@ -2,10 +2,13 @@ const Joi = require('joi');
 
 const createAccount = async (data) => {
   const schema = Joi.object({
-    name: Joi.string().email().required(),
+    name: Joi.string().required(),
     user: Joi.string().required(),
     password: Joi.string().min(8).required(),
-    address: Joi.string().required()
+    picture: Joi.string().optional(),
+    status: Joi.string().required(),
+    unitId: Joi.number().required(),
+    higherAccountId: Joi.any()
   });
 
   return schema.validate(data);
@@ -22,9 +25,11 @@ const loginAccount = async (data) => {
 
 const createRequest = async (data) => {
   const schema = Joi.object({
+    type: Joi.string().required(),
+    reason: Joi.string().required(),
     requesterId: Joi.number().required(),
     requestedId: Joi.number().required(),
-    note: Joi.string().required(),
+    note: Joi.string().optional(),
     status: Joi.string().required()
   });
 

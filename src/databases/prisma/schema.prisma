@@ -135,6 +135,9 @@ model VehicleInventory {
 
 model Request {
   id          Int           @id @default(autoincrement())
+  code        String
+  type        String
+  reason      String        @db.LongText
   requester   Account       @relation(name: "RequesterRelation", fields: [requesterId], references: [id])
   requesterId Int
   requested   Account       @relation(name: "RequestedRelation", fields: [requestedId], references: [id])
