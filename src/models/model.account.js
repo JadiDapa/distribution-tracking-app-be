@@ -29,6 +29,9 @@ class AccountModel {
 
   async create(data) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
+    if (data.unitId === 2) {
+      data.higherAccountId = 1;
+    }
     return await prisma.account.create({
       data: {
         name: data.name,

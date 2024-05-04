@@ -10,6 +10,7 @@ const MaterialInventoryRouter = require('./routes/route.material-inventory');
 const ToolRouter = require('./routes/route.tool');
 const ToolCategoryRouter = require('./routes/route.tool-category');
 const VehicleRouter = require('./routes/route.vehicle');
+const VehicleVariantRouter = require('./routes/route.vehicle-variant');
 const AccountUnitRouter = require('./routes/route.account-unit');
 const RequestRouter = require('./routes/route.request');
 const RequestItemRouter = require('./routes/route-request-item');
@@ -24,6 +25,7 @@ app.use('/api', MaterialInventoryRouter);
 app.use('/api', ToolRouter);
 app.use('/api', ToolCategoryRouter);
 app.use('/api', VehicleRouter);
+app.use('/api', VehicleVariantRouter);
 app.use('/api', RequestRouter);
 app.use('/api', RequestItemRouter);
 

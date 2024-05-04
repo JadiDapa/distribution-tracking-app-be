@@ -29,7 +29,7 @@ const createRequest = async (data) => {
     reason: Joi.string().required(),
     requesterId: Joi.number().required(),
     requestedId: Joi.number().required(),
-    note: Joi.string().optional(),
+    note: Joi.any().optional(),
     status: Joi.string().required()
   });
 
@@ -62,6 +62,16 @@ const createMaterialInventory = async (data) => {
     quantity: Joi.number().required(),
     materialId: Joi.number().required(),
     accountId: Joi.number().required()
+  });
+
+  return schema.validate(data);
+};
+
+const updateMaterialInventory = async (data) => {
+  const schema = Joi.object({
+    accountId: Joi.number().required(),
+    reason: Joi.string().required(),
+    note: Joi.any()
   });
 
   return schema.validate(data);
@@ -108,5 +118,6 @@ module.exports = {
   createTool,
   createToolCategory,
   createMaterialInventory,
-  createToolInventory
+  createToolInventory,
+  updateMaterialInventory
 };

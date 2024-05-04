@@ -14,15 +14,11 @@ MaterialInventoryRouter.get(
   MaterialInventoryController.getMaterialInventoryByAccountAndId
 );
 MaterialInventoryRouter.post(
-  '/material-inventories/accept',
+  '/material-inventories/update',
   authCheck,
-  MaterialInventoryController.acceptMaterialStock
+  MaterialInventoryController.updateMaterialQuantity
 );
-MaterialInventoryRouter.put(
-  '/material-inventories/:materialInventoryId',
-  authCheck,
-  MaterialInventoryController.editMaterialInventory
-);
+
 MaterialInventoryRouter.delete(
   '/material-inventories/:materialInventoryId',
   authCheck,

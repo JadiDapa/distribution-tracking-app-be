@@ -35,20 +35,14 @@ class MaterialInventoryController {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
-
-  static async editMaterialInventory(req, res) {
+  static async updateMaterialQuantity(req, res) {
     try {
-      const materialInventoryId = parseInt(req.params.materialInventoryId);
-      const data = req.body;
-      const { error } = await Validation.createMaterialInventory(data);
+      const { items, ...data } = req.body;
+      const { error } = await Validation.updateMaterialInventory(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
-      const updatedRequest = await materialInventory.editById(materialInventoryId, data);
-
-      if (!updatedRequest) {
-        return ErrorResponse.NotFound(req, res, error.message);
-      }
+      const postUpdate = await materialInventory.postUpdate(data, items);
 
       return SuccessResponse.Created(req, res, 'Material Inventory Updated');
     } catch (error) {

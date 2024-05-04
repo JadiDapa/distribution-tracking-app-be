@@ -55,7 +55,13 @@ class RequestModel {
         id: 'desc'
       }
     });
-    let newCode = String(getCode.id + 38402).padStart(6, '0');
+    let newCode;
+    if (getCode) {
+      newCode = String(getCode.id + 1).padStart(6, '0');
+    } else {
+      newCode = '000001';
+    }
+
     data.code = newCode;
     return await prisma.request.create({
       data: data

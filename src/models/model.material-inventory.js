@@ -6,6 +6,9 @@ class MaterialInventoryModel {
     return await prisma.materialInventory.findMany({
       where: {
         accountId: parseInt(accountId)
+      },
+      include: {
+        material: { select: { category: true, name: true, sku: true } }
       }
     });
   }
@@ -65,6 +68,64 @@ class MaterialInventoryModel {
         });
       }
     });
+  }
+
+  async postUpdate(data, items) {
+    const getCode = await prisma.materialQuantityUpdate.findFirst({
+      orderBy: {
+        id: 'desc'
+      }
+    });
+    let newCode;
+    if (getCode) {
+      newCode = String(Number(getCode.code) + 1);
+    } else {
+      newCode = '100001';
+    }
+
+    data.code = newCode;
+
+    const postUpdater = await prisma.materialQuantityUpdate.create({
+      data: data
+    });
+
+    if (postUpdater) {
+      items.forEach(async (item) => {
+        await prisma.materialQuantityItems.create({
+          data: {
+            materialId: item.materialId,
+            quantity: item.quantity,
+            MaterialQuantityUpdateId: postUpdater.id
+          }
+        });
+
+        const getInventory = await prisma.materialInventory.findFirst({
+          where: {
+            accountId: data.accountId,
+            materialId: item.materialId
+          }
+        });
+
+        if (getInventory) {
+          await prisma.materialInventory.update({
+            where: {
+              id: getInventory.id
+            },
+            data: {
+              quantity: getInventory.quantity + item.quantity
+            }
+          });
+        } else {
+          await prisma.materialInventory.create({
+            data: {
+              accountId: data.accountId,
+              materialId: item.materialId,
+              quantity: item.quantity
+            }
+          });
+        }
+      });
+    }
   }
 
   async editById(materialInventoryId, newData) {

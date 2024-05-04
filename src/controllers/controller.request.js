@@ -42,6 +42,7 @@ class RequestController {
   static async createRequest(req, res) {
     try {
       const { items, ...data } = req.body;
+
       const { error } = await Validation.createRequest(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
