@@ -109,6 +109,16 @@ const createToolInventory = async (data) => {
   return schema.validate(data);
 };
 
+const updateToolInventory = async (data) => {
+  const schema = Joi.object({
+    accountId: Joi.number().required(),
+    reason: Joi.string().required(),
+    note: Joi.any()
+  });
+
+  return schema.validate(data);
+};
+
 module.exports = {
   createAccount,
   loginAccount,
@@ -119,5 +129,6 @@ module.exports = {
   createToolCategory,
   createMaterialInventory,
   createToolInventory,
-  updateMaterialInventory
+  updateMaterialInventory,
+  updateToolInventory
 };

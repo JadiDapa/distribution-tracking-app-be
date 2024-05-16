@@ -28,14 +28,16 @@ class ToolController {
     try {
       const data = req.body;
       const pictureUrl = req.fileUrl;
+      console.log(req.fileUrl);
       data.picture = pictureUrl;
       data.categoryId = parseInt(data.categoryId);
+      console.log(data);
       const { error } = await Validation.createTool(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
       }
       const result = await tool.create(data);
-      return SuccessResponse.Created(req, res, 'Tool created');
+      return SuccessResponse.Created(req, res, 'Tool created', result);
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
@@ -45,6 +47,10 @@ class ToolController {
     try {
       const toolId = parseInt(req.params.toolId);
       const data = req.body;
+      const pictureUrl = req.fileUrl;
+      data.picture = pictureUrl;
+      data.categoryId = parseInt(data.categoryId);
+
       const { error } = await Validation.createTool(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);

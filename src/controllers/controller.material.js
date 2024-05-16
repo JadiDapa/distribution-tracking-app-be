@@ -29,7 +29,6 @@ class MaterialController {
       const data = req.body;
       const pictureUrl = req.fileUrl;
       data.picture = pictureUrl;
-      data.categoryId = parseInt(data.categoryId);
       const { error } = await Validation.createMaterial(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);
@@ -45,6 +44,8 @@ class MaterialController {
     try {
       const materialId = parseInt(req.params.materialId);
       const data = req.body;
+      const pictureUrl = req.fileUrl;
+      data.picture = pictureUrl;
       const { error } = await Validation.createMaterial(data);
       if (error) {
         return ErrorResponse.BadRequest(req, res, error.details[0].message);

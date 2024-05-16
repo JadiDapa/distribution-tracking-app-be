@@ -35,6 +35,7 @@ model Account {
   updatedAt              DateTime                 @updatedAt
   AreaVehicle            Vehicle[]                @relation("AreaRelation")
   LocationVehicle        Vehicle[]                @relation("LocationRelation")
+  ToolQuantityUpdate     ToolQuantityUpdate[]
 }
 
 model AccountUnit {
@@ -46,20 +47,19 @@ model AccountUnit {
 }
 
 model Material {
-  id                     Int                      @id @default(autoincrement())
-  name                   String                   @unique
-  sku                    String                   @unique
-  status                 String
-  detail                 String?
-  picture                String?
-  category               MaterialCat              @relation(fields: [categoryId], references: [id])
-  categoryId             Int
-  MaterialInventory      MaterialInventory[]
-  RequestItem            RequestItem[]
-  MaterialQuantityUpdate MaterialQuantityUpdate[]
-  MaterialQuantityItems  MaterialQuantityItems[]
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  sku                   String                  @unique
+  status                String
+  detail                String?
+  picture               String?
+  category              MaterialCat             @relation(fields: [categoryId], references: [id])
+  categoryId            Int
+  MaterialInventory     MaterialInventory[]
+  RequestItem           RequestItem[]
+  MaterialQuantityItems MaterialQuantityItems[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
 }
 
 model MaterialCat {
@@ -82,17 +82,15 @@ model MaterialInventory {
 }
 
 model MaterialQuantityUpdate {
-  id         Int                     @id @default(autoincrement())
-  code       String
-  reason     String                  @db.LongText
-  items      MaterialQuantityItems[]
-  note       String                  @db.LongText
-  account    Account                 @relation(fields: [accountId], references: [id])
-  accountId  Int
-  createdAt  DateTime                @default(now())
-  updatedAt  DateTime                @updatedAt
-  Material   Material?               @relation(fields: [materialId], references: [id])
-  materialId Int?
+  id        Int                     @id @default(autoincrement())
+  code      String
+  reason    String                  @db.LongText
+  items     MaterialQuantityItems[]
+  note      String                  @db.LongText
+  account   Account                 @relation(fields: [accountId], references: [id])
+  accountId Int
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
 }
 
 model MaterialQuantityItems {
@@ -107,19 +105,21 @@ model MaterialQuantityItems {
 }
 
 model Tool {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
-  sku           String          @unique
-  status        String
-  expired_at    DateTime
-  detail        String?
-  picture       String?
-  category      ToolCat         @relation(fields: [categoryId], references: [id])
-  categoryId    Int
-  ToolInventory ToolInventory[]
-  Request       RequestItem[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique
+  sku                String               @unique
+  status             String
+  expired_at         DateTime
+  detail             String?
+  picture            String?
+  category           ToolCat              @relation(fields: [categoryId], references: [id])
+  categoryId         Int
+  ToolInventory      ToolInventory[]
+  Request            RequestItem[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  ToolQuantityUpdate ToolQuantityUpdate[]
+  ToolQuantityItems  ToolQuantityItems[]
 }
 
 model ToolCat {
@@ -139,6 +139,31 @@ model ToolInventory {
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ToolQuantityUpdate {
+  id        Int                 @id @default(autoincrement())
+  code      String
+  reason    String              @db.LongText
+  items     ToolQuantityItems[]
+  note      String              @db.LongText
+  account   Account             @relation(fields: [accountId], references: [id])
+  accountId Int
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  Tool      Tool?               @relation(fields: [toolId], references: [id])
+  toolId    Int?
+}
+
+model ToolQuantityItems {
+  id                   Int                 @id @default(autoincrement())
+  tool                 Tool?               @relation(fields: [toolId], references: [id])
+  toolId               Int?
+  quantity             Int
+  toolQuantityUpdate   ToolQuantityUpdate? @relation(fields: [toolQuantityUpdateId], references: [id])
+  toolQuantityUpdateId Int?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
 }
 
 model Vehicle {

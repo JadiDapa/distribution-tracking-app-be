@@ -41,6 +41,17 @@ class VehicleModel {
     return await prisma.vehicle.findUnique({
       where: {
         id: parseInt(vehicleId)
+      },
+      include: {
+        variant: {
+          select: { category: true }
+        },
+        area: {
+          select: { name: true }
+        },
+        location: {
+          select: { name: true }
+        }
       }
     });
   }
@@ -63,9 +74,22 @@ class VehicleModel {
   }
 
   async editById(vehicleId, newData) {
+    newData.variantId = parseInt(newData.variantId);
+    newData.areaId = parseInt(newData.areaId);
+    newData.locationId = parseInt(newData.locationId);
     return await prisma.vehicle.update({
-      where: { id: parseInt(vehicleId) },
+      where: {
+        id: parseInt(vehicleId)
+      },
       data: newData
+    });
+  }
+
+  async deleteById(vehicleId) {
+    return await prisma.vehicle.delete({
+      where: {
+        id: parseInt(vehicleId)
+      }
     });
   }
 }

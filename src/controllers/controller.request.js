@@ -4,6 +4,8 @@ const RequestItemModel = require('../models/model.request-item');
 const requestItem = new RequestItemModel();
 const MaterialInventoryModel = require('../models/model.material-inventory');
 const materialInventory = new MaterialInventoryModel();
+const ToolInventoryModel = require('../models/model.tool-inventory');
+const toolInventory = new ToolInventoryModel();
 const ErrorResponse = require('../helpers/helper.error');
 const SuccessResponse = require('../helpers/helper.success');
 const Validation = require('../helpers/helper.validation');
@@ -59,10 +61,6 @@ class RequestController {
     try {
       const requestId = parseInt(req.params.requestId);
       const { items, ...data } = req.body;
-      const { error } = await Validation.createRequest(data);
-      if (error) {
-        return ErrorResponse.BadRequest(req, res, error.details[0].message);
-      }
 
       const updatedRequest = await request.editById(requestId, data);
       if (!updatedRequest) {

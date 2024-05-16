@@ -22,15 +22,17 @@ class MaterialModel {
   }
 
   async create(data) {
+    data.categoryId = parseInt(data.categoryId);
     return await prisma.material.create({
       data: data
     });
   }
 
-  async editById(materialId, newData) {
+  async editById(vehicleId, newData) {
+    newData.categoryId = parseInt(newData.categoryId);
     return await prisma.material.update({
       where: {
-        id: parseInt(materialId)
+        id: parseInt(vehicleId)
       },
       data: newData
     });

@@ -62,6 +62,19 @@ class VehicleController {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
+
+  static async deleteVehicle(req, res) {
+    try {
+      const vehicleId = parseInt(req.params.vehicleId);
+      const deletedRequest = await vehicle.deleteById(vehicleId);
+      if (!deletedRequest) {
+        return ErrorResponse.NotFound(req, res, 'Vehicle not found');
+      }
+      return SuccessResponse.OK(req, res, 'Vehicle deleted');
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
 }
 
 module.exports = VehicleController;

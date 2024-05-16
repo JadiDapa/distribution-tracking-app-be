@@ -13,7 +13,14 @@ ToolRouter.post(
   uploadMiddleware,
   ToolController.createTool
 );
-ToolRouter.put('/tools/:toolId', authCheck, ToolController.editTool);
-ToolRouter.delete('/tools/:toolId', authCheck, ToolController.deleteTool);
+ToolRouter.put(
+  '/tools/:toolId',
+  authCheck,
+  adminAuthCheck,
+  uploadMiddleware,
+  ToolController.editTool
+);
+
+ToolRouter.delete('/tools/:toolId', authCheck, adminAuthCheck, ToolController.deleteTool);
 
 module.exports = ToolRouter;

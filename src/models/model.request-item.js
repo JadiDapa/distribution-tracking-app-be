@@ -93,22 +93,7 @@ class RequestItemModel {
         });
       }
     });
-
-    return await prisma.requestItem.findMany({
-      where: {
-        requestId: parseInt(updatedRequest.id)
-      }
-    });
   }
-
-  // async editById(requestItemId, newData) {
-  //   return await prisma.requestItem.update({
-  //     where: {
-  //       id: parseInt(requestItemId)
-  //     },
-  //     data: newData
-  //   });
-  // }
 
   async deleteById(requestItemId) {
     return await prisma.requestItem.delete({

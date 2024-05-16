@@ -4,7 +4,7 @@ const AccountModel = require('../models/model.account');
 const account = new AccountModel();
 
 const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '9999d' });
 };
 
 const verifyToken = (token) => {

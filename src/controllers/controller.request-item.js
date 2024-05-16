@@ -30,7 +30,6 @@ class RequestItemController {
       const request = req.result;
       const items = req.items;
       request.code = items.code;
-      console.log(request);
       // const result = await requestItem.create(request, items);
       return SuccessResponse.Created(req, res, 'Request Item created', result);
     } catch (error) {

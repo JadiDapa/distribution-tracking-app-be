@@ -17,6 +17,7 @@ MaterialRouter.put(
   '/materials/:materialId',
   authCheck,
   adminAuthCheck,
+  uploadMiddleware,
   MaterialController.editMaterial
 );
 MaterialRouter.delete(

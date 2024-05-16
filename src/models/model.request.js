@@ -25,6 +25,9 @@ class RequestModel {
         requested: {
           select: { name: true }
         },
+        requester: {
+          select: { name: true }
+        },
         items: true
       }
     });

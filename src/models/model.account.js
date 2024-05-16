@@ -15,6 +15,15 @@ class AccountModel {
     return await prisma.account.findUnique({
       where: {
         id: parseInt(accountId)
+      },
+      include: {
+        unit: true,
+        higherAccount: {
+          include: { unit: true }
+        },
+        lowerAccounts: {
+          include: { unit: true }
+        }
       }
     });
   }
