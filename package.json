@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
-    "start": "node --watch src/index.js",
+    "start": "node --watch api/index.js",
     "create": "node src/helpers/helper.generator.js create"
   },
   "repository": {
