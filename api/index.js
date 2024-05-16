@@ -19,9 +19,9 @@ const RequestRouter = require('../src/routes/route.request');
 const RequestItemRouter = require('../src/routes/route-request-item');
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // Allow only this origin to access the server
+  origin: process.env.FRONTEND_URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies to be sent
+  credentials: true,
   optionsSuccessStatus: 204
 };
 
