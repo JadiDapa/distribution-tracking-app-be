@@ -20,24 +20,24 @@ const RequestItemRouter = require('../src/routes/route-request-item');
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/', AccountRouter);
-app.use('/', AccountUnitRouter);
-app.use('/', MaterialRouter);
-app.use('/', MaterialCategoryRouter);
-app.use('/', MaterialInventoryRouter);
-app.use('/', MaterialUpdatesRouter);
-app.use('/', ToolRouter);
-app.use('/', ToolCategoryRouter);
-app.use('/', ToolInventoryRouter);
-app.use('/', ToolUpdatesRouter);
-app.use('/', VehicleRouter);
-app.use('/', VehicleVariantRouter);
-app.use('/', RequestRouter);
-app.use('/', RequestItemRouter);
+app.use('/api', AccountRouter);
+app.use('/api', AccountUnitRouter);
+app.use('/api', MaterialRouter);
+app.use('/api', MaterialCategoryRouter);
+app.use('/api', MaterialInventoryRouter);
+app.use('/api', MaterialUpdatesRouter);
+app.use('/api', ToolRouter);
+app.use('/api', ToolCategoryRouter);
+app.use('/api', ToolInventoryRouter);
+app.use('/api', ToolUpdatesRouter);
+app.use('/api', VehicleRouter);
+app.use('/api', VehicleVariantRouter);
+app.use('/api', RequestRouter);
+app.use('/api', RequestItemRouter);
 
 app.listen(port, () => {
   console.log('Server aktif');
   console.log(`http://localhost:${port}`);
 });
 
-module.exports = f;
+module.exports = app;
