@@ -227,6 +227,7 @@ model Request {
   items       RequestItem[]
   note        String?       @db.LongText
   status      String        @default("pending")
+  signedPdf   String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }

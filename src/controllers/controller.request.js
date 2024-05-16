@@ -61,6 +61,8 @@ class RequestController {
     try {
       const requestId = parseInt(req.params.requestId);
       const { items, ...data } = req.body;
+      console.log(items);
+      console.log('LIMIT');
 
       const updatedRequest = await request.editById(requestId, data);
       if (!updatedRequest) {
@@ -71,33 +73,42 @@ class RequestController {
         return SuccessResponse.OK(req, res, 'Request Declined');
       }
 
-      const updatedItems = await requestItem.handleRequestItem(updatedRequest, items);
-      await materialInventory.acceptStock(updatedRequest, updatedItems);
+      try {
+        await requestItem.handleRequestItem(updatedRequest, items);
+
+        const updatedItems = await requestItem.getAllByRequestId(updatedRequest.id);
+        if (updatedRequest.type === 'material') {
+          await materialInventory.acceptStock(updatedRequest, updatedItems);
+        } else if (updatedRequest.type === 'tool') {
+          await toolInventory.acceptStock(updatedRequest, updatedItems);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
       return SuccessResponse.Created(req, res, 'Request Updated', updatedItems);
     } catch (error) {
       return ErrorResponse.InternalServerError(req, res, error.message);
     }
   }
 
-  // static async editRequest(req, res) {
-  //   try {
-  //     const requestId = parseInt(req.params.requestId);
-  //     const data = req.body;
-  //     const { error } = await Validation.createRequest(requestId, data);
-  //     if (error) {
-  //       return ErrorResponse.BadRequest(req, res, error.details[0].message);
-  //     }
-  //     const updatedRequest = await request.editById(requestId, newData);
+  static async signRequest(req, res) {
+    try {
+      const requestId = parseInt(req.params.requestId);
+      const data = req.body;
+      const signedPdf = req.fileUrl;
+      data.signedPdf = signedPdf;
+      const updatedRequest = await request.editById(requestId, data);
 
-  //     if (!updatedRequest) {
-  //       return ErrorResponse.NotFound(req, res, error.message);
-  //     }
+      if (!updatedRequest) {
+        return ErrorResponse.NotFound(req, res, error.message);
+      }
 
-  //     return SuccessResponse.Created(req, res, 'Request created', result);
-  //   } catch (error) {
-  //     return ErrorResponse.InternalServerError(req, res, error.message);
-  //   }
-  // }
+      return SuccessResponse.Created(req, res, 'Material Updated');
+    } catch (error) {
+      return ErrorResponse.InternalServerError(req, res, error.message);
+    }
+  }
 
   static async deleteRequest(req, res) {
     try {

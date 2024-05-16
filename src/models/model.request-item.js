@@ -49,12 +49,18 @@ class RequestItemModel {
   }
 
   async handleRequestItem(updatedRequest, items) {
-    items.forEach(async (item) => {
-      const getOldItem = await prisma.requestItem.findUnique({
+    // Store promises for each operation to wait for all to complete later
+    const promises = [];
+
+    // Handle create or update operations
+    for (const item of items) {
+      const getOldItemPromise = prisma.requestItem.findUnique({
         where: {
           id: parseInt(item.id)
         }
       });
+
+      const getOldItem = await getOldItemPromise;
 
       const itemData = {
         quantity: item.quantity,
@@ -63,38 +69,62 @@ class RequestItemModel {
       };
 
       if (getOldItem) {
-        await prisma.requestItem.update({
-          where: {
-            id: parseInt(item.id)
-          },
-          data: itemData
-        });
+        promises.push(
+          prisma.requestItem.update({
+            where: {
+              id: parseInt(item.id)
+            },
+            data: itemData
+          })
+        );
       } else {
-        await prisma.requestItem.create({
-          data: itemData
-        });
+        promises.push(
+          prisma.requestItem.create({
+            data: itemData
+          })
+        );
       }
-    });
+    }
 
+    // Wait for all create/update operations to complete
+    await Promise.all(promises);
+
+    // Fetch all items related to the updated request
     const getItems = await prisma.requestItem.findMany({
       where: {
         requestId: parseInt(updatedRequest.id)
       }
     });
 
-    const newMaterialIds = items.map((item) => item.materialId);
+    // Collect deletion promises
+    const deletionPromises = [];
 
-    getItems.forEach(async (oldItem) => {
+    // Get new material IDs from the updated items
+    const newMaterialIds = items.map((item) => parseInt(item.materialId));
+
+    // Delete items that are no longer present
+    getItems.forEach((oldItem) => {
       if (!newMaterialIds.includes(oldItem.materialId)) {
-        await prisma.requestItem.delete({
-          where: {
-            id: parseInt(oldItem.id)
-          }
-        });
+        deletionPromises.push(
+          prisma.requestItem.delete({
+            where: {
+              id: parseInt(oldItem.id)
+            }
+          })
+        );
+      }
+    });
+
+    // Wait for all deletion operations to complete
+    await Promise.all(deletionPromises);
+
+    // Return the updated list of items
+    return prisma.requestItem.findMany({
+      where: {
+        requestId: parseInt(updatedRequest.id)
       }
     });
   }
-
   async deleteById(requestItemId) {
     return await prisma.requestItem.delete({
       where: {
