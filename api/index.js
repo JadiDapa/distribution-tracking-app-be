@@ -18,7 +18,14 @@ const AccountUnitRouter = require('../src/routes/route.account-unit');
 const RequestRouter = require('../src/routes/route.request');
 const RequestItemRouter = require('../src/routes/route-request-item');
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173', // Allow only this origin to access the server
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies to be sent
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use('/api', AccountRouter);
 app.use('/api', AccountUnitRouter);
