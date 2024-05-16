@@ -4,7 +4,6 @@
   "description": "restful api of inventory-distribution",
   "main": "src/index.js",
   "scripts": {
-    "build": "prisma generate",
     "postinstall": "prisma generate",
     "test": "jest --detectOpenHandles --forceExit",
     "start": "node --watch api/index.js",
