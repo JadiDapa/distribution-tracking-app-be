@@ -8,7 +8,7 @@ class ToolInventoryModel {
         accountId: parseInt(accountId)
       },
       include: {
-        tool: { select: { category: true, name: true, sku: true } }
+        tool: { select: { category: true, name: true, sku: true, expired_at: true } }
       }
     });
   }
