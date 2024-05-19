@@ -67,13 +67,15 @@ class AccountController {
     try {
       const accountId = parseInt(req.params.accountId);
       const newData = req.body;
+      const pictureUrl = req.fileUrl;
+      newData.picture = pictureUrl;
       const updatedAccount = await account.editById(accountId, newData);
 
       if (!updatedAccount) {
-        return ErrorResponse.NotFound(req, res, 'Accounts Found', results);
+        return ErrorResponse.NotFound(req, res, 'Accounts Found', updatedAccount);
       }
 
-      return SuccessResponse.Created(req, res, 'Account Updated', results);
+      return SuccessResponse.Created(req, res, 'Account Updated', updatedAccount);
     } catch (error) {
       return response.InternalServerError(req, res, error.message);
     }

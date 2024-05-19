@@ -71,6 +71,12 @@ class AccountModel {
   }
 
   async editById(accountId, newData) {
+    console.log(newData);
+    const hashedPassword = await bcrypt.hash(newData.password, 10);
+    newData.password = hashedPassword;
+    newData.unitId = parseInt(newData.unitId);
+    newData.higherAccountId = parseInt(newData.higherAccountId);
+
     return await prisma.account.update({
       where: {
         id: parseInt(accountId)

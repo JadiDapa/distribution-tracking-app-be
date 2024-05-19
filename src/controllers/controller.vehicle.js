@@ -51,6 +51,7 @@ class VehicleController {
     try {
       const vehicleId = parseInt(req.params.vehicleId);
       const data = req.body;
+      console.log(data);
       const updatedRequest = await vehicle.editById(vehicleId, data);
 
       if (!updatedRequest) {
