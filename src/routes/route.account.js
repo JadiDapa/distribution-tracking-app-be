@@ -6,7 +6,7 @@ const uploadMiddleware = require('../middleware/middleware.upload-file');
 
 AccountRouter.get('/accounts', authCheck, AccountController.getAccounts);
 AccountRouter.get('/accounts/:accountId', authCheck, AccountController.getAccountById);
-AccountRouter.post('/accounts/create', authCheck, adminAuthCheck, AccountController.createAccount);
+AccountRouter.post('/accounts/create', AccountController.createAccount);
 AccountRouter.post('/accounts/login', AccountController.loginAccount);
 AccountRouter.put(
   '/accounts/:accountId',

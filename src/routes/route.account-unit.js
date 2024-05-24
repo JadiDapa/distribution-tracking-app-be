@@ -7,8 +7,7 @@ AccountUnitRouter.get('/account-units', AccountUnitController.getAccountUnits);
 AccountUnitRouter.get('/account-units/:accountUnitId', AccountUnitController.getAccountUnitById);
 AccountUnitRouter.post(
   '/account-units/create',
-  authCheck,
-  adminAuthCheck,
+
   AccountUnitController.createAccountUnit
 );
 

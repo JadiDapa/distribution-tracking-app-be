@@ -74,9 +74,9 @@ class VehicleModel {
   }
 
   async editById(vehicleId, newData) {
-    newData.variantId = parseInt(newData.variantId);
-    newData.areaId = parseInt(newData.areaId);
-    newData.locationId = parseInt(newData.locationId);
+    newData.variantId = newData.variantId ? Number(newData.variantId) : newData.variantId;
+    newData.areaId = newData.areaId ? Number(newData.areaId) : newData.areaId;
+    newData.locationId = newData.locationId ? Number(newData.locationId) : newData.locationId;
     return await prisma.vehicle.update({
       where: {
         id: parseInt(vehicleId)
