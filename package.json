@@ -4,6 +4,7 @@
   "description": "restful api of inventory-distribution",
   "main": "src/index.js",
   "scripts": {
+    "postinstall": "prisma generate",
     "test": "jest --detectOpenHandles --forceExit",
     "start": "nodemon index.js",
     "create": "node src/helpers/helper.generator.js create"
