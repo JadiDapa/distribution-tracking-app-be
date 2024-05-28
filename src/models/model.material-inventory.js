@@ -24,14 +24,14 @@ class MaterialInventoryModel {
 
   async acceptStock(request, items) {
     items.forEach(async (item) => {
-      const getRequestedInventory = await prisma.materialInventory.findUnique({
+      const getRequestedInventory = await prisma.materialInventory.findFirst({
         where: {
           materialId: parseInt(item.materialId),
           accountId: parseInt(request.requestedId)
         }
       });
 
-      const getRequesterInventory = await prisma.materialInventory.findUnique({
+      const getRequesterInventory = await prisma.materialInventory.findFirst({
         where: {
           materialId: parseInt(item.materialId),
           accountId: parseInt(request.requesterId)

@@ -25,17 +25,23 @@ const uploadMiddleware = (req, res, next) => {
     if (!req.file) {
       return next();
     }
-    cloudinary.uploader.upload(req.file.path, (error, result) => {
-      if (error) {
-        return res.status(400).json({
-          status: 'error',
-          message: error.message
-        });
-      }
+    cloudinary.uploader.upload(
+      req.file.path,
+      {
+        timeout: 60000
+      },
+      (error, result) => {
+        if (error) {
+          return res.status(400).json({
+            status: 'error',
+            message: error.message
+          });
+        }
 
-      req.fileUrl = result.secure_url;
-      next();
-    });
+        req.fileUrl = result.secure_url;
+        next();
+      }
+    );
   });
 };
 

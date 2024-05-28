@@ -65,7 +65,8 @@ class RequestItemModel {
       const itemData = {
         quantity: item.quantity,
         requestId: item.requestId,
-        materialId: parseInt(item.materialId)
+        materialId: item.materialId ? parseInt(item.materialId) : null,
+        toolId: item.toolId ? parseInt(item.toolId) : null
       };
 
       if (getOldItem) {
@@ -99,12 +100,24 @@ class RequestItemModel {
     // Collect deletion promises
     const deletionPromises = [];
 
-    // Get new material IDs from the updated items
-    const newMaterialIds = items.map((item) => parseInt(item.materialId));
+    // Get new material and tool IDs from the updated items
+    const newMaterialIds = items
+      .filter((item) => item.materialId)
+      .map((item) => parseInt(item.materialId));
+    const newToolIds = items.filter((item) => item.toolId).map((item) => parseInt(item.toolId));
 
     // Delete items that are no longer present
     getItems.forEach((oldItem) => {
-      if (!newMaterialIds.includes(oldItem.materialId)) {
+      if (oldItem.materialId && !newMaterialIds.includes(oldItem.materialId)) {
+        deletionPromises.push(
+          prisma.requestItem.delete({
+            where: {
+              id: parseInt(oldItem.id)
+            }
+          })
+        );
+      }
+      if (oldItem.toolId && !newToolIds.includes(oldItem.toolId)) {
         deletionPromises.push(
           prisma.requestItem.delete({
             where: {
@@ -125,6 +138,7 @@ class RequestItemModel {
       }
     });
   }
+
   async deleteById(requestItemId) {
     return await prisma.requestItem.delete({
       where: {

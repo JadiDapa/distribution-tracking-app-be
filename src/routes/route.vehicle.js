@@ -24,7 +24,6 @@ VehicleRouter.delete(
   '/vehicles/:vehicleId',
   authCheck,
   adminAuthCheck,
-  uploadMiddleware,
   VehicleController.deleteVehicle
 );
 

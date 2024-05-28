@@ -4,9 +4,8 @@
   "description": "restful api of inventory-distribution",
   "main": "src/index.js",
   "scripts": {
-    "postinstall": "prisma generate",
     "test": "jest --detectOpenHandles --forceExit",
-    "start": "node --watch api/index.js",
+    "start": "nodemon index.js",
     "create": "node src/helpers/helper.generator.js create"
   },
   "repository": {
@@ -33,6 +32,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.1",
     "prettier": "3.2.5",
     "prisma": "^5.11.0",
     "webpack": "^5.91.0",

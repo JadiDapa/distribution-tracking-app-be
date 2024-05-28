@@ -24,14 +24,14 @@ class ToolInventoryModel {
 
   async acceptStock(request, items) {
     items.forEach(async (item) => {
-      const getRequestedInventory = await prisma.toolInventory.findUnique({
+      const getRequestedInventory = await prisma.toolInventory.findFirst({
         where: {
           toolId: parseInt(item.toolId),
           accountId: parseInt(request.requestedId)
         }
       });
 
-      const getRequesterInventory = await prisma.toolInventory.findUnique({
+      const getRequesterInventory = await prisma.toolInventory.findFirst({
         where: {
           toolId: parseInt(item.toolId),
           accountId: parseInt(request.requesterId)

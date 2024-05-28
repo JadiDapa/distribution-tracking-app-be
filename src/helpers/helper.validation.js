@@ -5,7 +5,7 @@ const createAccount = async (data) => {
     name: Joi.string().required(),
     user: Joi.string().required(),
     password: Joi.string().min(8).required(),
-    picture: Joi.string().optional(),
+    picture: Joi.any(),
     status: Joi.string().required(),
     unitId: Joi.number().required(),
     higherAccountId: Joi.any()
@@ -29,7 +29,7 @@ const createRequest = async (data) => {
     reason: Joi.string().required(),
     requesterId: Joi.number().required(),
     requestedId: Joi.number().required(),
-    note: Joi.any().optional(),
+    note: Joi.any(),
     status: Joi.string().required()
   });
 
@@ -41,8 +41,8 @@ const createMaterial = async (data) => {
     name: Joi.string().required(),
     sku: Joi.string().required(),
     status: Joi.string().required(),
-    detail: Joi.string().optional(),
-    picture: Joi.string().optional(),
+    detail: Joi.any(),
+    picture: Joi.any(),
     categoryId: Joi.number().required()
   });
 
@@ -83,8 +83,8 @@ const createTool = async (data) => {
     sku: Joi.string().required(),
     status: Joi.string().required(),
     expired_at: Joi.date().required(),
-    detail: Joi.string().optional(),
-    picture: Joi.string().optional(),
+    detail: Joi.any(),
+    picture: Joi.any(),
     categoryId: Joi.number().required()
   });
 

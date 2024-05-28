@@ -72,7 +72,7 @@ class AccountController {
       const updatedAccount = await account.editById(accountId, newData);
 
       if (!updatedAccount) {
-        return ErrorResponse.NotFound(req, res, 'Accounts Found', updatedAccount);
+        return ErrorResponse.NotFound(req, res, 'Accounts not Found', updatedAccount);
       }
 
       return SuccessResponse.Created(req, res, 'Account Updated', updatedAccount);

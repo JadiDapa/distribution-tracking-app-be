@@ -61,8 +61,6 @@ class RequestController {
     try {
       const requestId = parseInt(req.params.requestId);
       const { items, ...data } = req.body;
-      console.log(items);
-      console.log('LIMIT');
 
       const updatedRequest = await request.editById(requestId, data);
       if (!updatedRequest) {
@@ -75,13 +73,14 @@ class RequestController {
 
       try {
         await requestItem.handleRequestItem(updatedRequest, items);
-
         const updatedItems = await requestItem.getAllByRequestId(updatedRequest.id);
         if (updatedRequest.type === 'material') {
           await materialInventory.acceptStock(updatedRequest, updatedItems);
         } else if (updatedRequest.type === 'tool') {
           await toolInventory.acceptStock(updatedRequest, updatedItems);
         }
+
+        return SuccessResponse.OK(req, res, 'Request Declined');
       } catch (error) {
         console.log(error);
       }
